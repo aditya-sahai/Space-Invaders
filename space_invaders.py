@@ -25,12 +25,15 @@ pygame.display.set_caption('Space Invaders')
 clock = pygame.time.Clock()
 
 player_ship = Ship(screen_dict)
+enemy = Alien()
+enemy.generate_aliens(screen_dict)
 
 while True:
 
     key = check_event()
 
     player_ship.move(key, screen_dict)
+    enemy.move(screen_dict)
 
-    draw_game_window(screen_dict, player_ship)
+    draw_game_window(screen_dict, player_ship, enemy)
     clock.tick(30)
