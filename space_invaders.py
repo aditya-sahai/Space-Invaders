@@ -35,5 +35,7 @@ while True:
     player_ship.move(key, screen_dict)
     enemy.move(screen_dict)
 
+    player_ship.bullet.bullets = enemy.check_bullet(player_ship.bullet.bullets)
+
     draw_game_window(screen_dict, player_ship, enemy)
     clock.tick(30)

@@ -102,19 +102,18 @@ class Alien:
 
     def move(self, screen_dict):
         """Change the aliens x and y."""
-        for alien in self.aliens:
-            if alien[1][0] <= 0:
-                alien[4][0] = 10
-                alien[4][1] = 10
-            elif alien[1][0] + alien[3][2] >= screen_dict['width']:
-                alien[4][0] = -10
-                alien[4][1] = 10
+        for index, alien in enumerate(self.aliens):
+            if alien[2][0] <= 0:
+                alien[3][0] = 10
+                alien[3][1] = 10
+            elif alien[2][0] + alien[2][2] >= screen_dict['width']:
+                alien[3][0] = -10
+                alien[3][1] = 10
             else:
-                alien[4][1] = 0
+                alien[3][1] = 0
 
-            alien[1][0] += alien[4][0]
-            alien[1][1] += alien[4][1]
-
+            alien[2][0] += alien[3][0]
+            alien[2][1] += alien[3][1]
 
     def generate_aliens(self, screen_dict):
         """Generates a list of aliens."""
@@ -122,9 +121,23 @@ class Alien:
             x = random.randint(0, screen_dict['width'] - 200)
             y = random.randint(0, int(screen_dict['height'] / 2))
             image, points, image_rect, x_change, y_change = self.get_image_imagerect()
-            self.aliens.append([image, [x, y], points, image_rect, [x_change, y_change]])
+            image_rect[0] = x
+            image_rect[1] = y
+            self.aliens.append([image, points, image_rect, [x_change, y_change]])
 
     def draw_aliens(self, screen):
         """Draw the aliens on the screen."""
         for alien in self.aliens:
-            screen.blit(alien[0], alien[1])
+            screen.blit(alien[0], alien[2][:2])
+
+    def check_bullet(self, bullet_list):
+        alien_list = self.aliens[:]
+        bullets = bullet_list[:]
+        for index, alien in enumerate(self.aliens):
+            alien_rect = alien[2]
+            for b_index, bullet in enumerate(bullet_list):
+                if bullet.colliderect(alien_rect):
+                    del alien_list[index]
+                    del bullets[b_index]
+        self.aliens = alien_list
+        return bullets
